@@ -47,7 +47,8 @@ const handlePost = function( request, response ) {
     request.on( "end", function() {
         console.log( JSON.parse( dataString ) )
 
-        // ... do something with the data here!!!
+        // ... do something with the data here and at least generate the derived data
+
         response.writeHead( 200, "OK", {"Content-Type": "text/plain" })
         response.end("text")
     })
