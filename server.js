@@ -48,7 +48,6 @@ const handlePost = function( request, response ) {
         console.log( JSON.parse( dataString ) )
 
         // ... do something with the data here!!!
-
         response.writeHead( 200, "OK", {"Content-Type": "text/plain" })
         response.end("text")
     })
@@ -79,3 +78,4 @@ const sendFile = function( response, filename ) {
 // process.env.PORT references the port that Glitch uses
 // the following line will either use the Glitch port or one that we provided
 server.listen( process.env.PORT || port )
+

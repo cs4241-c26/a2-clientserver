@@ -14,7 +14,7 @@ const submit = async function( event ) {
     const response = await fetch( "/submit", {
         method:'POST',
         body
-    }).then()
+    })
 
     const text = await response.text()
     console.log( "text:", text )
