@@ -7,18 +7,17 @@ const submit = async function( event ) {
     // remains to this day
     event.preventDefault()
 
-    const input = document.querySelector( '#yourname' ),
+    const input = document.querySelector( "#yourname" ),
         json = { yourname: input.value },
         body = JSON.stringify( json )
 
-    const response = await fetch( '/submit', {
+    const response = await fetch( "/submit", {
         method:'POST',
         body
-    })
+    }).then()
 
     const text = await response.text()
-
-    console.log( 'text:', text )
+    console.log( "text:", text )
 }
 
 window.onload = function() {
