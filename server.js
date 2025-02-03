@@ -9,10 +9,22 @@ const http = require( "node:http" ),
     port = 3000
 
 const appdata = [
-    { "model": "toyota", "year": 1999, "mpg": 23 },
-    { "model": "honda", "year": 2004, "mpg": 30 },
-    { "model": "ford", "year": 1987, "mpg": 14}
+    { itemname: 'test1', qty: '3', date: '2025-02-04', type: 'poultry' }
+
 ]
+
+// these are mostly guesses for demonstration please dont rely on my homework for food saftey
+const foodtypes = {
+    "poultry": 4,
+    "beef": 5,
+    "leafy greens": 5,
+    "rooted vegetable": 14,
+    "fruit": 7,
+    "dairy": 10,
+    "bread": 12,
+    "canned": 600,
+    "dry goods": 360
+}
 
 // let fullURL = ""
 const server = http.createServer( function( request,response ) {
@@ -32,7 +44,11 @@ const handleGet = function( request, response ) {
 
     if( request.url === "/" ) {
         sendFile( response, "public/index.html" )
-    }else{
+    }
+    else if ( request.url.includes('/api')) {
+        api( request, response )
+    }
+    else {
         sendFile( response, filename )
     }
 }
@@ -74,6 +90,18 @@ const sendFile = function( response, filename ) {
 
         }
     })
+}
+
+const api = function( request, response ) {
+    response.writeHeader(200, { "Content-Type": "application/json" })
+    if (request.url.includes("tabledata")) {
+        response.end(JSON.stringify(appdata))
+        console.log("sent table")
+    }
+    else if (request.url.includes("types")) {
+        response.end(JSON.stringify(foodtypes))
+        console.log("sent food data")
+    }
 }
 
 // process.env.PORT references the port that Glitch uses

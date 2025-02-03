@@ -6,10 +6,15 @@ const submit = async function( event ) {
     // this was the original browser behavior and still
     // remains to this day
     event.preventDefault()
-
-    const input = document.querySelector( "#yourname" ),
-        json = { yourname: input.value },
-        body = JSON.stringify( json )
+    const fields = ['itemname', 'qty', 'date', 'type']
+    const data = {}
+    fields.forEach( field => {
+        const elem =document.getElementById( field )
+        data[field] = elem.value
+        // reset form after reading value
+        elem.value = ''
+    })
+        body = JSON.stringify( data )
 
     const response = await fetch( "/submit", {
         method:'POST',
@@ -20,14 +25,28 @@ const submit = async function( event ) {
     console.log( "text:", text )
 }
 
-window.onload = function() {
+const getTypes = async function() {
+    const response = await fetch( "/api/types" )
+    if (response.ok) {
+        const types = await response.json()
+        const dropdown = document.getElementById('type')
+        Object.keys(types).forEach( key => {
+            const option = document.createElement("option");
+            option.text = key
+            option.value = key
+            dropdown.appendChild(option)
+        })
+    }
+}
+
+window.onload = async function() {
     const button = document.getElementById("submit");
     button.onclick = submit;
-    // TODO: populate types of food
+    await getTypes()
     // todo: update rows
 }
 
 const updateTable = async function() {
-    const rowdata = await fetch( "/polldata" );
+    const rowdata = await fetch( "/api/tabledata" );
 
 }
