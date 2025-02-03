@@ -28,7 +28,7 @@ When the user clicks the "Edit" button, the app pre-fills the form with the exis
 ## Design / UX Achievements
 
 ### 1. User Testing with Think-Aloud Protocol
-To evaluate the usability of the app, user testing was conducted with two classmates using the Think-Aloud Protocol. Each tester was given a task to perform, such as adding and editing a workout entry, without any instructions provided upfront. The goal was to observe the testers' behavior, identify any issues or confusion they encountered, and gather feedback for improving the user experience.
+To evaluate the usability of the app, user testing was conducted with one classmate, Jahnavi Prudhivi using the Think-Aloud Protocol. Jahnavi  was given a task to perform, such as adding and editing a workout entry, without any instructions provided upfront. The goal was to observe the testers' behavior, identify any issues or confusion they encountered, and gather feedback for improving the user experience.
 
 #### Problems Observed:
 - Users were confused about the "Edit" button and didn’t realize they needed to click it before modifying a workout.
