@@ -1,6 +1,11 @@
 # Assignment 2 - Personal Workout Tracker - Progress Check
 **By: Vivek Reddy Kasireddy**
 
+## Tips on how to use the application 
+The user inputs their workouts -> Name, Time, Type (Strength, Cardio) and then any extra notes they have. 
+The user would refresh the page to see that it has been added to log. 
+The user can also edit a workout that is already added to the log and then click add exercise to see that that exercise has been updated. 
+
 ## Technical Achievements
 
 ### 1. Single-Page App with Live Data Updates
