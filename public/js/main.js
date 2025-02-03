@@ -21,6 +21,13 @@ const submit = async function( event ) {
 }
 
 window.onload = function() {
-    const button = document.querySelector("button");
+    const button = document.getElementById("submit");
     button.onclick = submit;
+    // TODO: populate types of food
+    // todo: update rows
+}
+
+const updateTable = async function() {
+    const rowdata = await fetch( "/polldata" );
+
 }
