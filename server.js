@@ -8,18 +8,17 @@ const http = require( "node:http" ),
     dir  = "public/",
     port = 3000
 
-const appdata = [
-    { "model": "toyota", "year": 1999, "mpg": 23 },
-    { "model": "honda", "year": 2004, "mpg": 30 },
-    { "model": "ford", "year": 1987, "mpg": 14}
-]
 
-// let fullURL = ""
+// data from form
+let workoutData = [];
+
 const server = http.createServer( function( request,response ) {
     if( request.method === "GET" ) {
         handleGet( request, response )
     }else if( request.method === "POST" ){
         handlePost( request, response )
+    }else if( request.method === "DELETE" ){
+        handleDelete( request, response )
     }
 
     // The following shows the requests being sent to the server
@@ -27,32 +26,46 @@ const server = http.createServer( function( request,response ) {
     // console.log( fullURL );
 })
 
-const handleGet = function( request, response ) {
-    const filename = dir + request.url.slice( 1 )
 
-    if( request.url === "/" ) {
-        sendFile( response, "public/index.html" )
-    }else{
-        sendFile( response, filename )
+
+const handleGet = function (request, response) {
+    const filename = dir + request.url.slice(1);
+    if (request.url === "/") {
+        sendFile(response, "public/index.html");
+    } else {
+        sendFile(response, filename);
     }
-}
+};
 
-const handlePost = function( request, response ) {
-    let dataString = ""
+const handlePost = function (request, response) {
+    let storeData = "";
 
-    request.on( "data", function( data ) {
-        dataString += data
-    })
+    request.on("data", function (data) {
+        storeData += data;
+    });
 
-    request.on( "end", function() {
-        console.log( JSON.parse( dataString ) )
+    request.on("end", function () {
+        const formData = JSON.parse(storeData);
 
-        // ... do something with the data here and at least generate the derived data
+        // derived data to calculate the intensity
+        const workoutIntensity = calculateIntensity(formData);
+
+        // new entry to the table
+        const formEntry = {
+            "muscle-group": formData["muscle-group"],
+            "numexercises": formData["numexercises"],
+            "date": formData["date"],
+            "workout-intensity": workoutIntensity,
+            "comments": formData["comments"],
+        };
+
+        workoutData.push(formEntry);
 
         response.writeHead( 200, "OK", {"Content-Type": "text/plain" })
-        response.end("text")
-    })
-}
+        response.end(JSON.stringify(workoutData));
+        // response.end("text")
+    });
+};
 
 const sendFile = function( response, filename ) {
     const type = mime.getType( filename )
@@ -76,7 +89,52 @@ const sendFile = function( response, filename ) {
     })
 }
 
+// our derived attribute function
+const calculateIntensity = (data) => {
+
+    // get the number of exercises
+    const numExercises = parseInt(data["numexercises"], 10);
+
+    // simple classification of intensity based on number of exercises
+    if (numExercises >= 6) {
+        return "High";
+
+    } else if (numExercises >= 3) {
+        return "Medium";
+
+    } else {
+        return "Low";
+    }
+};
+
+const handleDelete = function(request, response) {
+
+    // storing out data in string
+    let storeData = "";
+
+    // adding all the data into the string
+    request.on("data", function(data) {
+        storeData = storeData + data;
+    });
+
+    // event listener for when all the information is sent
+    request.on("end", function() {
+        const {
+            // identifying the index to delete
+            index } = JSON.parse(storeData);
+
+        if (workoutData[index]) {
+            // deleting the index of that row
+            workoutData.splice(index, 1);
+        }
+
+        response.writeHead( 200, "OK", {"Content-Type": "text/plain" })
+        response.end(JSON.stringify(workoutData));
+    });
+};
+
+
+
 // process.env.PORT references the port that Glitch uses
 // the following line will either use the Glitch port or one that we provided
 server.listen( process.env.PORT || port )
-

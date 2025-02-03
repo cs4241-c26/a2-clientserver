@@ -10,10 +10,75 @@
     <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 </head>
 <body>
-<form>
-    <label for="yourname">Your Name: </label><input type="text" id="yourname" value="your name here">
-    <button>submit</button>
+
+<main>
+
+    <section>
+<h1>Workout Logger</h1>
+
+<form action="/" method="post">
+    <p>
+        <label for="muscle-group">Muscle Group:</label>
+        <select name="muscle-group" id="muscle-group" required>
+            <option value="" selected disabled>Select a muscle group</option>
+            <option value="back">Back</option>
+            <option value="chest">Chest</option>
+            <option value="legs">Legs</option>
+            <option value="triceps">Triceps</option>
+            <option value="biceps">Biceps</option>
+            <option value="shoulders">Shoulders</option>
+            <option value="abs">Abdominals</option>
+        </select>
+    </p>
+
+    <p>
+        <label for="numexercises">Number of Exercises:</label>
+        <select name="numexercises" id="numexercises" required>
+            <option value="" selected disabled>Select number of exercises</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value=">8">More than 8</option>
+        </select>
+    </p>
+
+    <p>
+        <label for="date">Date of Workout:</label>
+        <input type="date" id="date" name="date" required>
+    </p>
+
+    <p>
+        <label for="comments">Additional Comments:</label>
+        <textarea id="comments" name="comments" rows="2" cols="15"></textarea>
+    </p>
+
+    <input type="submit" value="Submit">
 </form>
+    </section>
+
+    <section>
+<h2>Workout Logs</h2>
+<table id="workout-table">
+    <thead>
+    <tr>
+        <th>Muscle Group</th>
+        <th>Number of Exercises</th>
+        <th>Date</th>
+        <th>Comments</th>
+        <th>Workout Intensity</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- workout data in here -->
+    </tbody>
+</table>
+    </section>
+</main>
 
 </body>
 </html>
