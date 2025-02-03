@@ -1,82 +1,104 @@
-const http = require( "node:http" ),
-    fs   = require( "node:fs" ),
-    // IMPORTANT: you must run `npm install` in the directory for this assignment
-    // to install the mime library if you're testing this on your local machine.
-    // However, Glitch will install it automatically by looking in your package.json
-    // file.
-    mime = require( "mime" ),
-    dir  = "public/",
-    port = 3000
+const http = require("node:http");
+const fs = require("node:fs");
+const path = require("node:path");
+const mime = require("mime");
+const port = 3000;
 
-const appdata = [
-    { "model": "toyota", "year": 1999, "mpg": 23 },
-    { "model": "honda", "year": 2004, "mpg": 30 },
-    { "model": "ford", "year": 1987, "mpg": 14}
-]
+const exercises = []; // In-memory storage for exercise data
 
-// let fullURL = ""
-const server = http.createServer( function( request,response ) {
-    if( request.method === "GET" ) {
-        handleGet( request, response )
-    }else if( request.method === "POST" ){
-        handlePost( request, response )
-    }
+const server = http.createServer((request, response) => {
+    const { method, url } = request;
 
-    // The following shows the requests being sent to the server
-    // fullURL = `http://${request.headers.host}${request.url}`
-    // console.log( fullURL );
-})
-
-const handleGet = function( request, response ) {
-    const filename = dir + request.url.slice( 1 )
-
-    if( request.url === "/" ) {
-        sendFile( response, "public/index.html" )
-    }else{
-        sendFile( response, filename )
-    }
-}
-
-const handlePost = function( request, response ) {
-    let dataString = ""
-
-    request.on( "data", function( data ) {
-        dataString += data
-    })
-
-    request.on( "end", function() {
-        console.log( JSON.parse( dataString ) )
-
-        // ... do something with the data here and at least generate the derived data
-
-        response.writeHead( 200, "OK", {"Content-Type": "text/plain" })
-        response.end("text")
-    })
-}
-
-const sendFile = function( response, filename ) {
-    const type = mime.getType( filename )
-
-    fs.readFile( filename, function( err, content ) {
-
-        // if the error = null, then we've loaded the file successfully
-        if( err === null ) {
-
-            // status code: https://httpstatuses.com
-            response.writeHeader( 200, { "Content-Type": type })
-            response.end( content )
-
+    if (method === "GET") {
+        if (url === "/") {
+            sendFile(response, "public/index.html");
+        } else if (url === "/data") {
+            response.writeHead(200, { "Content-Type": "application/json" });
+            response.end(JSON.stringify(exercises));
         } else {
-
-            // file not found, error code 404
-            response.writeHeader( 404 )
-            response.end( "404 Error: File Not Found" )
-
+            sendFile(response, `public${url}`);
         }
-    })
-}
+    } else if (method === "POST" && url === "/add") {
+        handlePost(request, response);
+    } else if (method === "DELETE" && url.startsWith("/delete/")) {
+        handleDelete(request, response, url);
+    } else {
+        response.writeHead(404);
+        response.end("404 Not Found");
+    }
+});
 
-// process.env.PORT references the port that Glitch uses
-// the following line will either use the Glitch port or one that we provided
-server.listen( process.env.PORT || port )
+const handlePost = (request, response) => {
+    let dataString = "";
 
+    request.on("data", (chunk) => {
+        dataString += chunk;
+    });
+
+    request.on("end", () => {
+        const data = JSON.parse(dataString);
+        exercises.push(data);
+
+        response.writeHead(200, { "Content-Type": "application/json" });
+        response.end(JSON.stringify(exercises));
+    });
+};
+
+const handleDelete = (request, response, url) => {
+    const index = parseInt(url.split("/").pop());
+    if (!isNaN(index) && index >= 0 && index < exercises.length) {
+        exercises.splice(index, 1);
+    }
+
+    response.writeHead(200, { "Content-Type": "application/json" });
+    response.end(JSON.stringify(exercises));
+};
+
+const handlePut = (request, response, url) => {
+    const index = parseInt(url.split("/").pop());
+    if (isNaN(index) || index < 0 || index >= exercises.length) {
+        response.writeHead(400);
+        response.end("Invalid index");
+        return;
+    }
+
+    let dataString = "";
+
+    request.on("data", (chunk) => {
+        dataString += chunk;
+    });
+
+    request.on("end", () => {
+        const updatedData = JSON.parse(dataString);
+        exercises[index] = updatedData; // Update existing entry
+
+        response.writeHead(200, { "Content-Type": "application/json" });
+        response.end(JSON.stringify(exercises));
+    });
+};
+
+server.on("request", (request, response) => {
+    if (request.method === "PUT" && request.url.startsWith("/update/")) {
+        handlePut(request, response, request.url);
+    }
+});
+
+
+const sendFile = (response, filepath) => {
+    const filePathWithDir = path.resolve(filepath);
+    const type = mime.getType(filePathWithDir);
+
+    fs.readFile(filePathWithDir, (err, content) => {
+        if (err) {
+            response.writeHead(404);
+            response.end("404 File Not Found");
+        } else {
+            response.writeHead(200, { "Content-Type": type });
+            response.end(content);
+        }
+    });
+};
+
+server.listen(port, () => {
+    console.log(`Server is running on http://localhost:${port}`);
+});

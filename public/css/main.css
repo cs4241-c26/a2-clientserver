@@ -1,4 +1,86 @@
 body {
-    background:black;
-    color:white;
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background: #f4f4f9;
+    color: #333;
+}
+
+header {
+    text-align: center;
+    padding: 1em;
+    background: #6c63ff;
+    color: white;
+}
+
+main {
+    padding: 1em;
+    max-width: 900px;
+    margin: auto;
+}
+
+#form-section, #results-section {
+    background: white;
+    border-radius: 10px;
+    padding: 1em;
+    margin-bottom: 1em;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+form label {
+    display: block;
+    margin: 0.5em 0 0.2em;
+}
+
+form input, form select, form button {
+    width: 100%;
+    padding: 0.5em;
+    margin-bottom: 1em;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+form button {
+    background: #6c63ff;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+form button:hover {
+    background: #5a54d4;
+}
+
+#exercise-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#exercise-table th, #exercise-table td {
+    border: 1px solid #ddd;
+    padding: 0.5em;
+    text-align: left;
+}
+
+#exercise-table th {
+    background: #6c63ff;
+    color: white;
+}
+
+#exercise-table tbody tr:nth-child(even) {
+    background: #f9f9f9;
+}
+
+#exercise-table button {
+    background: #ff6b6b;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 0.3em 0.6em;
+    cursor: pointer;
+}
+
+#exercise-table button:hover {
+    background: #d45a5a;
 }
