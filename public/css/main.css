@@ -1,4 +1,79 @@
 body {
-    background:black;
-    color:white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: "Franklin Gothic Book", sans-serif;
+    background-color: whitesmoke;
+    margin: 0;
+    padding: 0;
+}
+
+h1, h2 {
+    text-align: center;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 5px 5px 100px 5px lightblue;
+
+}
+
+select, input, textarea {
+
+    width: 100%;
+    padding: 8px;
+    margin: 10px 0;
+    border: 1px solid lightslategray;
+    border-radius: 4px;
+}
+
+input[type="submit"] {
+    background-color: limegreen;
+    color: white;
+    cursor: pointer;
+}
+
+input[type="submit"]:hover {
+    background-color: forestgreen;
+}
+
+table {
+    width: 1200px;
+    margin: 20px auto;
+    border-collapse: collapse;
+}
+
+textarea {
+    resize: vertical;
+    overflow: auto;
+}
+
+th, td {
+    padding: 8px;
+    border: 1px solid darkgrey;
+    text-align: center;
+}
+
+th {
+    background-color: ghostwhite;
+}
+
+.deleteButton {
+    background-color: indianred;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.deleteButton:active {
+    background-color: darkred;
 }
