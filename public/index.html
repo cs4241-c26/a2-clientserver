@@ -1,19 +1,68 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>CS4241 Assignment 2</title>
-    <meta charset="utf-8">
-    <script src="js/main.js"></script>
-    <link rel="stylesheet" href="css/main.css">
-
-    <!-- get rid of favicon error -->
-    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+  <meta charset="UTF-8">
+  <title>Todo List App - Home</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<form>
-    <label for="yourname">Your Name: </label><input type="text" id="yourname" value="your name here">
-    <button>submit</button>
-</form>
+  <header>
+    <h1>Todo List Application</h1>
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="results.html">View Todos</a></li>
+      </ul>
+    </nav>
+  </header>
+  <main>
+    <section id="add-todo">
+      <h2>Add a New Todo</h2>
+      <form id="todoForm">
+        <div class="form-group">
+          <label for="task">Task:</label>
+          <input type="text" id="task" name="task" required>
+        </div>
+        <div class="form-group">
+          <label for="priority">Priority (1=High, 2=Medium, 3=Low):</label>
+          <input type="number" id="priority" name="priority" min="1" max="3" required>
+        </div>
+        <div class="form-group">
+          <input type="hidden" id="creation_date" name="creation_date">
+        </div>
+        <button type="submit">Add Todo</button>
+      </form>
+      <div id="formResult"></div>
+    </section>
+  </main>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('creation_date').value = today;
+    });
 
+    document.getElementById('todoForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const task = document.getElementById('task').value;
+      const priority = document.getElementById('priority').value;
+      const creation_date = document.getElementById('creation_date').value;
+      const response = await fetch('/todos', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ task, priority, creation_date })
+      });
+      const resultDiv = document.getElementById('formResult');
+      if (response.ok) {
+        const data = await response.json();
+        resultDiv.innerHTML = `<p>Todo added! Computed deadline: <strong>${data.deadline}</strong></p>`;
+        document.getElementById('todoForm').reset();
+      } else {
+        const errorText = await response.text();
+        resultDiv.innerHTML = `<p>Error: ${errorText}</p>`;
+      }
+    });
+  </script>
 </body>
 </html>
