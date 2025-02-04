@@ -1,4 +1,4 @@
-## Ariel Schechter a2-shortstack: Todo App
+## Ariel Schechter a2-shortstack: Todo App [Glitch link](https://a2-aschechter10.glitch.me/)
 This app is a simple single page todo app. Click the floating action button in the bottom right to open the form to add a new task. Click the X icon in the corresponding row of a task and confirm to delete a task. 
 
 ## Technical Achievements
