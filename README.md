@@ -1,6 +1,6 @@
 # Todo List App
 
-Glitch Link: https://github.com/mjrb7/a2-mjrb7
+Glitch Link: https://a2-mjrb7.glitch.me/
 
 My application is a todo list app, it allows you to add, edit, mark, and delete tasks. You can add a priority and a category to each task as well as adding a custom deadline you want to complete the task by. It also has a filter that allows you to sort the tasks by category and the app uses a CSS Flexbox to keep all the components arranged and looking good on any screen size.
 
