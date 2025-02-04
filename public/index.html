@@ -1,19 +1,70 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <title>CS4241 Assignment 2</title>
-    <meta charset="utf-8">
-    <script src="js/main.js"></script>
-    <link rel="stylesheet" href="css/main.css">
+    <meta charset="utf-8" >
+    <script src="js/main.js" defer></script>
+    <script src="js/modal.js" defer></script>
+    <link rel="stylesheet" href="css/main.css" >
+    <link rel="stylesheet" href="css/modal.css" >
 
     <!-- get rid of favicon error -->
-    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
-</head>
-<body>
-<form>
-    <label for="yourname">Your Name: </label><input type="text" id="yourname" value="your name here">
-    <button>submit</button>
-</form>
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=" >
+  </head>
+  <body>
+    <h1>Todo List</h1>
+    <table id="todoTable">
+      <thead>
+        <tr>
+          <th>Task</th>
+          <th>Priority</th>
+          <th>Creation Date</th>
+          <th>Due Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Rows will be added dynamically via JavaScript -->
+      </tbody>
+    </table>
 
-</body>
+    <!-- Floating Action Button -->
+    <button id="fab" title="Add New Task">+</button>
+
+    <!-- Modal Structure -->
+    <div id="todoModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Add New Task</h2>
+        <form id="todoForm">
+          <label for="task">Task:</label>
+          <input
+            type="text"
+            id="task"
+            required
+            placeholder="Write your task here..."
+          >
+
+          <label for="priority">Priority:</label>
+          <select id="priority" required>
+            <option value="" disabled selected>Select Priority</option>
+            <option value="High">High</option>
+            <option value="Medium">Medium</option>
+            <option value="Low">Low</option>
+          </select>
+
+          <label>Creation Date:</label>
+          <span id="creation_date"></span>
+
+          <div class="modal-actions">
+            <button type="reset" id="resetForm">Reset</button>
+            <div class="right-buttons">
+              <button type="button" id="cancelModal">Cancel</button>
+              <button type="submit" id="submitTodo">Submit</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </body>
 </html>
