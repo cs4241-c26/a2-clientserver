@@ -13,6 +13,8 @@ Feedback: The single page app design works well for this context but without lab
 
 Integrated?: Yes, I added a title attribute to both the add a new task button and to the delete buttons to help the user understand what to do if it isn't clear.
 
+-----------------------------------
+
 User 2: Ian Wright
 
 Feedback: App looks great! Very intuitive and easy to use. Only feedback is maybe make the add button a little bigger since it can be a little hard to find on the bottom right of the page. I 
