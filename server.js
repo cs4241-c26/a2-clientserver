@@ -1,82 +1,88 @@
-const http = require( "node:http" ),
-    fs   = require( "node:fs" ),
-    // IMPORTANT: you must run `npm install` in the directory for this assignment
-    // to install the mime library if you're testing this on your local machine.
-    // However, Glitch will install it automatically by looking in your package.json
-    // file.
-    mime = require( "mime" ),
-    dir  = "public/",
-    port = 3000
+const http = require("node:http"),
+    fs = require("node:fs"),
+    mime = require("mime"),
+    dir = "public/",
+    port = 3000;
 
-const appdata = [
-    { "model": "toyota", "year": 1999, "mpg": 23 },
-    { "model": "honda", "year": 2004, "mpg": 30 },
-    { "model": "ford", "year": 1987, "mpg": 14}
-]
+let todos = [];
+let currentId = 1;
 
-// let fullURL = ""
-const server = http.createServer( function( request,response ) {
-    if( request.method === "GET" ) {
-        handleGet( request, response )
-    }else if( request.method === "POST" ){
-        handlePost( request, response )
-    }
+function calculateDeadline(priority, creationDate, customDeadline) {
+    if (customDeadline) return new Date(customDeadline).toISOString();
 
-    // The following shows the requests being sent to the server
-    // fullURL = `http://${request.headers.host}${request.url}`
-    // console.log( fullURL );
-})
-
-const handleGet = function( request, response ) {
-    const filename = dir + request.url.slice( 1 )
-
-    if( request.url === "/" ) {
-        sendFile( response, "public/index.html" )
-    }else{
-        sendFile( response, filename )
-    }
+    const date = new Date(creationDate);
+    const days = priority === 'high' ? 2 : priority === 'medium' ? 5 : 7;
+    date.setDate(date.getDate() + days);
+    return date.toISOString();
 }
 
-const handlePost = function( request, response ) {
-    let dataString = ""
+const server = http.createServer((req, res) => {
+    if (req.method === 'GET' && !req.url.startsWith('/api/')) {
+        const filename = dir + (req.url === "/" ? "index.html" : req.url);
+        fs.readFile(filename, (err, data) => {
+            if (err) {
+                res.writeHead(404, {'Content-Type': 'text/plain'});
+                return res.end('404 Not Found');
+            }
+            res.writeHead(200, {'Content-Type': mime.getType(filename)});
+            res.end(data);
+        });
+        return;
+    }
 
-    request.on( "data", function( data ) {
-        dataString += data
-    })
-
-    request.on( "end", function() {
-        console.log( JSON.parse( dataString ) )
-
-        // ... do something with the data here and at least generate the derived data
-
-        response.writeHead( 200, "OK", {"Content-Type": "text/plain" })
-        response.end("text")
-    })
-}
-
-const sendFile = function( response, filename ) {
-    const type = mime.getType( filename )
-
-    fs.readFile( filename, function( err, content ) {
-
-        // if the error = null, then we've loaded the file successfully
-        if( err === null ) {
-
-            // status code: https://httpstatuses.com
-            response.writeHeader( 200, { "Content-Type": type })
-            response.end( content )
-
-        } else {
-
-            // file not found, error code 404
-            response.writeHeader( 404 )
-            response.end( "404 Error: File Not Found" )
-
+    if (req.url === '/api/todos') {
+        if (req.method === 'GET') {
+            res.writeHead(200, {'Content-Type': 'application/json'});
+            return res.end(JSON.stringify(todos));
         }
-    })
-}
+        
+        if (req.method === 'POST') {
+            let body = '';
+            req.on('data', chunk => body += chunk);
+            req.on('end', () => {
+                const todo = JSON.parse(body);
+                todo.id = currentId++;
+                todo.creationDate = new Date().toISOString();
+                todo.deadline = calculateDeadline(todo.priority, todo.creationDate, todo.customDeadline);
+                todo.completed = false;
+                todos.push(todo);
+                res.writeHead(201, {'Content-Type': 'application/json'});
+                res.end(JSON.stringify(todo));
+            });
+            return;
+        }
+    }
 
-// process.env.PORT references the port that Glitch uses
-// the following line will either use the Glitch port or one that we provided
-server.listen( process.env.PORT || port )
+    if (req.url.startsWith('/api/todos/')) {
+        const id = parseInt(req.url.split('/').pop());
+        
+        if (req.method === 'PATCH') {
+            let body = '';
+            req.on('data', chunk => body += chunk);
+            req.on('end', () => {
+                const update = JSON.parse(body);
+                const todo = todos.find(t => t.id === id);
+                if (todo) {
+                    Object.assign(todo, update);
+                    res.writeHead(200, {'Content-Type': 'application/json'});
+                    res.end(JSON.stringify(todo));
+                } else {
+                    res.writeHead(404).end('Not found');
+                }
+            });
+            return;
+        }
+
+        if (req.method === 'DELETE') {
+            const initialLength = todos.length;
+            todos = todos.filter(todo => todo.id !== id);
+            res.writeHead(todos.length < initialLength ? 204 : 404).end();
+            return;
+        }
+    }
+
+    res.writeHead(404).end('Not found');
+});
+
+server.listen(port, () => console.log(`Server running at http://localhost:${port}/`));
 
