@@ -10,6 +10,10 @@ const submit = async function( event ) {
     const data = {}
     fields.forEach( field => {
         const elem =document.getElementById( field )
+        if (elem.value.length === 0){
+            alert("Field cannot be empty!")
+            return
+        }
         data[field] = elem.value
         // reset form after reading value
         elem.value = ''
@@ -49,13 +53,13 @@ window.onload = async function() {
 
 const deleteEntry = async function(event){
     event.preventDefault()
-    console.log("attempting to delete", event.target.parentElement.id)
-    let body = event.target.parentElement.id
+    const id = event.target.parentElement.parentElement.id
+    console.log("attempting to delete", id)
     const response = await fetch( "/api/delete", {
         method:'POST',
-        body
+        body: id
     })
-    event.target.parentElement.remove()
+    event.target.parentElement.parentElement.remove()
     if (!response.ok) {
         console.error("error response", response)
     }

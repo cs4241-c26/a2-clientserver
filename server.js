@@ -129,6 +129,10 @@ const api = function( request, response ) {
 
 const del = function(id){
     console.log("deleting row", id)
+    if (id.length === 0){
+        console.error("delete fail, ID is empty!")
+        return
+    }
     appdata.splice(appdata.findIndex(item => item.id === id), 1)
 }
 
