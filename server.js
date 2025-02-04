@@ -9,8 +9,8 @@ const http = require( "node:http" ),
     port = 3000
 
 const appdata = [
-    { id: crypto.randomUUID(), itemname: 'test1', qty: '3', date: '2025-02-04', type: 'poultry' },
-    { id: crypto.randomUUID(), itemname: 'test2', qty: '1', date: '2025-02-01', type: 'beef' }
+    { id: crypto.randomUUID(), itemname: 'Eggs', qty: '13', date: '2025-02-04', type: 'poultry' },
+    { id: crypto.randomUUID(), itemname: 'Milk', qty: '1', date: '2025-02-01', type: 'dairy' }
 ]
 
 // these are mostly guesses for demonstration please dont rely on my homework for food saftey
