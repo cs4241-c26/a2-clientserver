@@ -128,9 +128,9 @@ form {
     height: 30px;
     background-color: lightblue;
     position: absolute;
-    right: 20px;  /* Moves it to the right */
+    right: 20px;
     top: 50%;
-    transform: translateY(-50%); /* Centers it vertically */
+    transform: translateY(-50%);
 
 }
 
