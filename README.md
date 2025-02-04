@@ -6,6 +6,7 @@ This app is a simple single page todo app. Click the floating action button in t
 
 ### Design/Evaluation Achievements
 - **Design Achievement 1**: User interface testing
+
 User 1: James Walden
 Feedback: The single page app design works well for this context but without labels, it may not be clear what the buttons do and may not be accessible. 
 Integrated?: Yes, I added a title attribute to both the add a new task button and to the delete buttons to help the user understand what to do if it isn't clear.
