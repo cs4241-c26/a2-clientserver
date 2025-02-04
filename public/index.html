@@ -3,17 +3,48 @@
 <head>
     <title>CS4241 Assignment 2</title>
     <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@300..800&display=swap" rel="stylesheet">
     <script src="js/main.js"></script>
-    <link rel="stylesheet" href="css/main.css">
-
-    <!-- get rid of favicon error -->
-    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+    <link href="css/main.css" rel="stylesheet">
+    <link href="images/favicon.ico" rel="icon">
 </head>
 <body>
-<form>
-    <label for="yourname">Your Name: </label><input type="text" id="yourname" value="your name here">
-    <button>submit</button>
-</form>
+<div class="main-container">
+    <div class="top-bar">
+        <h1>K.I.M.</h1>
+        <h3>Kitchen Inventory Manager</h3>
+    </div>
+    <br>
+    <div class="table-container">
+        <form>
+            <table id="datatable">
+                <tr>
+                    <th><label for="itemname">Item Name</label></th>
+                    <th><label for="qty">Quantity</label></th>
+                    <th><label for="date">Date Purchased</label></th>
+                    <th><label for="type">Item Type</label></th>
+                    <th>Safe to Use?</th>
+                    <th>Actions</th>
+                </tr>
+                <tr class="newdatarow" id="newdatarow">
+                    <td><input id="itemname" placeholder="Item Name" type="text"></td>
+                    <td><input id="qty" min="1" placeholder="Enter Quantity" type="number"></td>
+                    <td><input id="date" type="date"></td>
+                    <!--            To be populated from JS -->
+                    <td><select id="type"></select></td>
+                    <td>N/A</td>
+                    <td>
+                        <button id="submit">Add</button>
+                    </td>
 
+                </tr>
+            </table>
+        </form>
+    </div>
+
+</div>
 </body>
 </html>
