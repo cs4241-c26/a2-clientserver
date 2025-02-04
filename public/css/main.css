@@ -1,4 +1,23 @@
 body {
-    background:black;
-    color:white;
+  background: #222222;
+  color: whitesmoke;
+  font-family: sans-serif;
+  text-align: left;
+}
+
+h1 {
+  text-align: center;
+}
+
+table {
+  margin: 0 auto;
+  border-spacing: 32px;
+}
+
+.delete-btn {
+  background-color: #a47ecf;
+  cursor: pointer;
+  border-radius: 50%;
+  font-weight: bold;
+  color: whitesmoke;
 }
