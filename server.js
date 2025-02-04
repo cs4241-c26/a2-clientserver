@@ -9,10 +9,8 @@ const http = require( "node:http" ),
     port = 3000
 
 const appdata = [
-    { "model": "toyota", "year": 1999, "mpg": 23 },
-    { "model": "honda", "year": 2004, "mpg": 30 },
-    { "model": "ford", "year": 1987, "mpg": 14}
 ]
+
 
 // let fullURL = ""
 const server = http.createServer( function( request,response ) {
@@ -32,7 +30,8 @@ const handleGet = function( request, response ) {
 
     if( request.url === "/" ) {
         sendFile( response, "public/index.html" )
-    }else{
+    }
+    else{
         sendFile( response, filename )
     }
 }
@@ -44,14 +43,96 @@ const handlePost = function( request, response ) {
         dataString += data
     })
 
-    request.on( "end", function() {
-        console.log( JSON.parse( dataString ) )
+    console.log( request.url );
 
-        // ... do something with the data here and at least generate the derived data
+    request.on("end", function () {
 
-        response.writeHead( 200, "OK", {"Content-Type": "text/plain" })
-        response.end("text")
-    })
+
+        let parsedData = JSON.parse(dataString);
+
+
+        if (request.url === "/submit") {
+            handleAdd(parsedData, response);
+        } else if (request.url === "/edit") {
+            handleEdit(parsedData, response);
+        } else if (request.url === "/populate") {
+            handlePopulate(response);
+        } else if (request.url === "/delete") {
+            handleDelete(parsedData, response);
+        }
+        else {
+            response.writeHead(404, { "Content-Type": "application/json" });
+            response.end(JSON.stringify({ success: false, message: "Route not found" }));
+        }
+    });
+}
+
+const handleAdd = function( parsedData, response ) {
+    const currentDate = new Date(parsedData.currentDate);
+    const dueDate = new Date(parsedData.dueDate);
+    parsedData.timeLeft = (dueDate - currentDate) / (1000 * 60 * 60 * 24);
+
+    appdata.push(parsedData);
+
+    response.writeHead(200, { "Content-Type": "application/json" });
+    response.end(JSON.stringify(appdata));
+}
+
+const handleEdit = function (parsedData, response) {
+    console.log("here")
+    console.log("parsed data: ", parsedData);
+    console.log("appdata: ", appdata)
+    const index = appdata.findIndex(item => item.title === parsedData.originalTitle);
+    console.log("index: ", index)
+
+    if (index !== -1) {
+
+        const currentDate = new Date(parsedData.currentDate);
+        const dueDate = new Date(parsedData.dueDate);
+
+        parsedData.timeLeft = (dueDate - currentDate) / (1000 * 60 * 60 * 24);
+
+
+        appdata[index] = { ...appdata[index], ...parsedData };
+
+        response.writeHead(200, { "Content-Type": "application/json" });
+        response.end(JSON.stringify({ success: true, data: appdata }));
+    } else {
+        console.log("miss")
+        response.writeHead(404, { "Content-Type": "application/json" });
+        response.end(JSON.stringify({ success: false, message: "Item not found" }));
+    }
+};
+
+const handleDelete = function(parsedData, response) {
+    const index = appdata.findIndex(item => item.title === parsedData.title);
+
+    if (index !== -1) {
+        appdata.splice(index, 1);
+        response.writeHead(200, { "Content-Type": "application/json" });
+        response.end(JSON.stringify({ success: true, data: appdata }));
+    } else {
+        response.writeHead(404, { "Content-Type": "application/json" });
+        response.end(JSON.stringify({ success: false, message: "Item not found" }));
+    }
+};
+
+const handlePopulate = function( response ) {
+    const currentDate = new Date();
+
+    console.log( currentDate );
+
+    appdata.forEach(item => {
+        const dueDate = new Date(item.dueDate);
+        console.log( dueDate );
+        item.timeLeft = Math.round((dueDate - currentDate) / (1000 * 60 * 60 * 24));
+        console.log("TIme left: ",item.timeLeft)
+
+    });
+
+    response.writeHead(200, { "Content-Type": "application/json" });
+    response.end(JSON.stringify({ success: true, data: appdata }));
+
 }
 
 const sendFile = function( response, filename ) {
