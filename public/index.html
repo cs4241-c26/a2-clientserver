@@ -3,13 +3,13 @@
 <head>
     <title>CS4241 Assignment 2</title>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
     <link href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@300..800&display=swap" rel="stylesheet">
     <script src="js/main.js"></script>
-    <link rel="stylesheet" href="css/main.css">
-    <link rel="icon" href="images/favicon.ico">
+    <link href="css/main.css" rel="stylesheet">
+    <link href="images/favicon.ico" rel="icon">
 </head>
 <body>
 <div class="main-container">
@@ -20,7 +20,7 @@
     <br>
     <div class="table-container">
         <form>
-            <table id = "datatable">
+            <table id="datatable">
                 <tr>
                     <th><label for="itemname">Item Name</label></th>
                     <th><label for="qty">Quantity</label></th>
@@ -30,13 +30,15 @@
                     <th>Actions</th>
                 </tr>
                 <tr class="newdatarow" id="newdatarow">
-                    <td><input type="text" id="itemname" placeholder="Item Name"</td>
-                    <td><input type="number" id="qty" placeholder="Enter Quantity" min="1"></td>
-                    <td><input type="date" id="date" placeholder="Enter Date Purchased"></td>
+                    <td><input id="itemname" placeholder="Item Name" type="text"></td>
+                    <td><input id="qty" min="1" placeholder="Enter Quantity" type="number"></td>
+                    <td><input id="date" type="date"></td>
                     <!--            To be populated from JS -->
                     <td><select id="type"></select></td>
                     <td>N/A</td>
-                    <td><button id="submit">Add</button></td>
+                    <td>
+                        <button id="submit">Add</button>
+                    </td>
 
                 </tr>
             </table>
