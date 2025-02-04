@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>CS4241 Assignment 2</title>
+    <meta charset="utf-8">
+    <script src="js/main.js" defer></script> <!-- Load JavaScript properly -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+</head>
+<body>
+
+
+
+<h1 id="header">1 Rep Max Tracker</h1>
+<p>Enter a new exercise or modify the reps/weight of another one.<br>Then we can project your 1 rep max using Epley's formula.<br><br></p>
+<table id="dataTable">
+    <thead>
+        <tr>
+            <th>Exercise</th>
+            <th>Reps</th>
+            <th>Weight</th>
+            <th>Projected 1 RPM</th>
+            <th> </th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+    <tr>
+        <form id="dataForm">
+            <td><input type="text" id="exercise" class="input-field" placeholder="Exercise"></td>
+            <td><input type="text" id="reps" class="input-field" placeholder="Reps"></td>
+            <td><input type="text" id="weight" class="input-field" placeholder="Weight"></td>
+            <td><button type="submit" id="submit-button">Submit</button></td>
+            <td> </td>
+        </form>
+    </tr>
+</table>
+
+
+
+
+</body>
+</html> 
