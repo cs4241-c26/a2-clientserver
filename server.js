@@ -9,8 +9,8 @@ const http = require( "node:http" ),
     port = 3000
 
 const appdata = [
-    { itemname: 'test1', qty: '3', date: '2025-02-04', type: 'poultry' }
-
+    { id: crypto.randomUUID(), itemname: 'test1', qty: '3', date: '2025-02-04', type: 'poultry' },
+    { id: crypto.randomUUID(), itemname: 'test2', qty: '1', date: '2025-02-01', type: 'beef' }
 ]
 
 // these are mostly guesses for demonstration please dont rely on my homework for food saftey
@@ -61,10 +61,17 @@ const handlePost = function( request, response ) {
     })
 
     request.on( "end", function() {
-        console.log( JSON.parse( dataString ) )
-
-        // ... do something with the data here and at least generate the derived data
-
+        if (request.url.includes("/api/delete")){
+            del(dataString)
+            response.writeHead(200, "OK")
+            response.end()
+            return
+        }
+        const data = JSON.parse( dataString )
+        data.id = crypto.randomUUID()
+        console.log( data )
+        appdata.push( data )
+        format_appdata() // calculates derived field
         response.writeHead( 200, "OK", {"Content-Type": "text/plain" })
         response.end("text")
     })
@@ -92,16 +99,37 @@ const sendFile = function( response, filename ) {
     })
 }
 
+const format_appdata = function() {
+    // calculate if item is still ok
+    const cur_date = new Date();
+    appdata.forEach( function( item ) {
+        // convert ms to days
+        let diff = (cur_date - Date.parse(item.date))/(24 * 60 * 60 * 1000)
+        let safe = "Yes"
+        if (diff > foodtypes[item.type]) {
+            safe = "No"
+        }
+        // update or add safe field
+        item.safe = safe
+    })
+    return JSON.stringify(appdata)
+}
+
 const api = function( request, response ) {
     response.writeHeader(200, { "Content-Type": "application/json" })
     if (request.url.includes("tabledata")) {
-        response.end(JSON.stringify(appdata))
+        response.end(format_appdata())
         console.log("sent table")
     }
     else if (request.url.includes("types")) {
         response.end(JSON.stringify(foodtypes))
         console.log("sent food data")
     }
+}
+
+const del = function(id){
+    console.log("deleting row", id)
+    appdata.splice(appdata.findIndex(item => item.id === id), 1)
 }
 
 // process.env.PORT references the port that Glitch uses
