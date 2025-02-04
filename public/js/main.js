@@ -68,7 +68,7 @@ const deleteEntry = async function(event){
 
 const addActionCol = async function(row) {
     let btn_delete = document.createElement("button")
-    btn_delete.textContent = "Delete"
+    btn_delete.textContent = "🗑"
     btn_delete.addEventListener("click", deleteEntry)
     let action_col = document.createElement("td")
     action_col.appendChild(btn_delete)
@@ -93,6 +93,12 @@ const updateTable = async function() {
         // row doesn't exist yet
         const new_row = document.createElement("tr");
         new_row.id = data_row.id
+        if (data_row.safe === 'Yes' ) {
+            new_row.classList.add("goodrow")
+        }
+        else {
+            new_row.classList.add("badrow")
+        }
         table.appendChild(new_row)
         table.insertBefore(new_row, existing_row)
 

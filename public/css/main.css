@@ -28,17 +28,16 @@ table {
     width: 95%;
     border-collapse: collapse;
     margin: 20px 0;
-    text-align: left;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 th {
     padding: 15px;
     border: 1px solid black;
     border-bottom: 2px solid black;
-    text-align: center;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
 
 td {
@@ -47,6 +46,12 @@ td {
 }
 .newdatarow {
     text-align: center;
+}
+.goodrow {
+    background-color: #22523d;
+}
+.badrow {
+    background-color: #70161c;
 }
 
 input {
