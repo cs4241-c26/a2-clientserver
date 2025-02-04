@@ -10,10 +10,58 @@
     <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 </head>
 <body>
-<form>
-    <label for="yourname">Your Name: </label><input type="text" id="yourname" value="your name here">
-    <button>submit</button>
-</form>
+    <header>
+        <h1>Task List</h1>
+    </header>
+    <main class="two-columns">
+        <section>
+            <h2>Create New Task</h2>
+            <table>
+                <thead>
+                <tr>
+                    <th><label for="taskName">Task Name</label></th>
+                    <th><label for="priority">Priority</label></th>
+                    <th><label for="dueDate">Due Date</label></th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td><input type="text" id="taskName" name="taskName" placeholder="Task Name"></td>
+                    <td>
+                        <select name="priority" id="priority">
+                            <option value="low">low</option>
+                            <option value="medium">medium</option>
+                            <option value="high">high</option>
+                        </select>
+                    </td>
+                    <td><input type="date" id="dueDate" name="dueDate"></td>
+                    <td><input type="submit" id="createTask" value="Create"></td>
+                </tr>
+                </tbody>
+            </table>
+        </section>
+        <section>
+            <h2>My Tasks</h2>
+            <table>
+                <thead>
+                <tr>
+                    <th><label>ID</label></th>
+                    <th><label>Task Name</label></th>
+                    <th><label>Priority</label></th>
+                    <th><label>Due Date</label></th>
+                    <th><label>Overdue?</label></th>
+                </tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+            </table>
+        </section>
+    </main>
+
+    <footer>
+        <p>Created by <a href="https://users.wpi.edu/~kastuparu/index.html" target="_blank">Katy Stuparu</a></p>
+        <p>WPI CS 4241 Webware, C Term 2025</p>
+    </footer>
 
 </body>
 </html>
