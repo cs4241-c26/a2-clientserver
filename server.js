@@ -1,82 +1,169 @@
-const http = require( "node:http" ),
-    fs   = require( "node:fs" ),
-    // IMPORTANT: you must run `npm install` in the directory for this assignment
-    // to install the mime library if you're testing this on your local machine.
-    // However, Glitch will install it automatically by looking in your package.json
-    // file.
-    mime = require( "mime" ),
-    dir  = "public/",
-    port = 3000
+const http = require("http");
+const fs = require("fs");
+const url = require("url");
+const mime = require("mime");
+const dir = "public/";
+const port = 3000;
 
-const appdata = [
-    { "model": "toyota", "year": 1999, "mpg": 23 },
-    { "model": "honda", "year": 2004, "mpg": 30 },
-    { "model": "ford", "year": 1987, "mpg": 14}
-]
+let todos = [];
+let nextId = 1;
 
-// let fullURL = ""
-const server = http.createServer( function( request,response ) {
-    if( request.method === "GET" ) {
-        handleGet( request, response )
-    }else if( request.method === "POST" ){
-        handlePost( request, response )
-    }
-
-    // The following shows the requests being sent to the server
-    // fullURL = `http://${request.headers.host}${request.url}`
-    // console.log( fullURL );
-})
-
-const handleGet = function( request, response ) {
-    const filename = dir + request.url.slice( 1 )
-
-    if( request.url === "/" ) {
-        sendFile( response, "public/index.html" )
-    }else{
-        sendFile( response, filename )
-    }
+function computeDeadline(creation_date, priority) {
+  const creationDate = new Date(creation_date);
+  let daysToAdd;
+  if (priority == 1) {
+    daysToAdd = 1;
+  } else if (priority == 2) {
+    daysToAdd = 3;
+  } else if (priority == 3) {
+    daysToAdd = 7;
+  } else {
+    daysToAdd = 5;
+  }
+  const deadlineDate = new Date(creationDate.getTime() + daysToAdd * 24 * 60 * 60 * 1000);
+  return deadlineDate.toISOString().split("T")[0];
 }
 
-const handlePost = function( request, response ) {
-    let dataString = ""
-
-    request.on( "data", function( data ) {
-        dataString += data
-    })
-
-    request.on( "end", function() {
-        console.log( JSON.parse( dataString ) )
-
-        // ... do something with the data here and at least generate the derived data
-
-        response.writeHead( 200, "OK", {"Content-Type": "text/plain" })
-        response.end("text")
-    })
+function sendFile(response, filename) {
+  const type = mime.getType(filename);
+  fs.readFile(filename, function(err, content) {
+    if (err === null) {
+      response.writeHead(200, { "Content-Type": type });
+      response.end(content);
+    } else {
+      response.writeHead(404, { "Content-Type": "text/plain" });
+      response.end("404 Error: File Not Found");
+    }
+  });
 }
 
-const sendFile = function( response, filename ) {
-    const type = mime.getType( filename )
+function handleGet(request, response) {
+  const parsedUrl = url.parse(request.url, true);
+  if (parsedUrl.pathname === "/") {
+    sendFile(response, "public/index.html");
+  } else if (parsedUrl.pathname === "/todos") {
+    response.writeHead(200, { "Content-Type": "application/json" });
+    response.end(JSON.stringify(todos));
+  } else {
+    sendFile(response, dir + parsedUrl.pathname.slice(1));
+  }
+}
 
-    fs.readFile( filename, function( err, content ) {
+function handlePost(request, response) {
+  let dataString = "";
+  request.on("data", function(chunk) {
+    dataString += chunk;
+  });
+  request.on("end", function() {
+    let data;
+    try {
+      data = JSON.parse(dataString);
+    } catch (err) {
+      response.writeHead(400, { "Content-Type": "text/plain" });
+      response.end("Invalid JSON");
+      return;
+    }
+    const parsedUrl = url.parse(request.url, true);
+    if (parsedUrl.pathname === "/todos") {
+      if (!data.task || !data.priority || !data.creation_date) {
+        response.writeHead(400, { "Content-Type": "text/plain" });
+        response.end("Missing required fields: task, priority, creation_date");
+        return;
+      }
+      const deadline = computeDeadline(data.creation_date, data.priority);
+      const newTodo = {
+        id: nextId++,
+        task: data.task,
+        priority: data.priority,
+        creation_date: data.creation_date,
+        deadline: deadline
+      };
+      todos.push(newTodo);
+      response.writeHead(200, { "Content-Type": "application/json" });
+      response.end(JSON.stringify(newTodo));
+    } else {
+      response.writeHead(404, { "Content-Type": "text/plain" });
+      response.end("Not Found");
+    }
+  });
+}
 
-        // if the error = null, then we've loaded the file successfully
-        if( err === null ) {
-
-            // status code: https://httpstatuses.com
-            response.writeHeader( 200, { "Content-Type": type })
-            response.end( content )
-
-        } else {
-
-            // file not found, error code 404
-            response.writeHeader( 404 )
-            response.end( "404 Error: File Not Found" )
-
+function handleEdit(request, response) {
+    let dataString = "";
+    request.on("data", function(chunk) {
+      dataString += chunk;
+    });
+    request.on("end", function() {
+      let data;
+      try {
+        data = JSON.parse(dataString);
+      } catch (err) {
+        response.writeHead(400, { "Content-Type": "text/plain" });
+        response.end("Invalid JSON");
+        return;
+      }
+      const parsedUrl = url.parse(request.url, true);
+      if (parsedUrl.pathname === "/edit-todo") {
+        if (!data.id || !data.task || !data.priority) {
+          response.writeHead(400, { "Content-Type": "text/plain" });
+          response.end("Missing required fields: id, task, priority");
+          return;
         }
-    })
+        // Convert the id to a number
+        const id = Number(data.id);
+        const index = todos.findIndex(todo => todo.id === id);
+        if (index === -1) {
+          response.writeHead(404, { "Content-Type": "text/plain" });
+          response.end("Todo not found");
+          return;
+        }
+        const todo = todos[index];
+        todo.task = data.task;
+        todo.priority = data.priority;
+        todo.deadline = computeDeadline(todo.creation_date, data.priority);
+        response.writeHead(200, { "Content-Type": "application/json" });
+        response.end(JSON.stringify(todo));
+      } else {
+        response.writeHead(404, { "Content-Type": "text/plain" });
+        response.end("Not Found");
+      }
+    });
+  }  
+
+function handleDelete(request, response) {
+  const parsedUrl = url.parse(request.url, true);
+  const id = Number(parsedUrl.query.id);
+  if (!id) {
+    response.writeHead(400, { "Content-Type": "text/plain" });
+    response.end("Missing id parameter");
+    return;
+  }
+  const index = todos.findIndex(todo => todo.id === id);
+  if (index === -1) {
+    response.writeHead(404, { "Content-Type": "text/plain" });
+    response.end("Todo not found");
+    return;
+  }
+  todos.splice(index, 1);
+  response.writeHead(200, { "Content-Type": "text/plain" });
+  response.end("Todo deleted");
 }
 
-// process.env.PORT references the port that Glitch uses
-// the following line will either use the Glitch port or one that we provided
-server.listen( process.env.PORT || port )
+// Creates the HTTP server
+const server = http.createServer(function(request, response) {
+  if (request.method === "GET") {
+    handleGet(request, response);
+  } else if (request.method === "POST") {
+    handlePost(request, response);
+  } else if (request.method === "PUT") {
+    handleEdit(request, response);
+  } else if (request.method === "DELETE") {
+    handleDelete(request, response);
+  } else {
+    response.writeHead(405, { "Content-Type": "text/plain" });
+    response.end("Method Not Allowed");
+  }
+});
 
+// Start the server
+server.listen(process.env.PORT || port, () => {});
