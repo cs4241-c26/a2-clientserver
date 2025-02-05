@@ -8,26 +8,57 @@ const http = require( "node:http" ),
     dir  = "public/",
     port = 3000
 
-const appdata = [
-    { "model": "toyota", "year": 1999, "mpg": 23 },
-    { "model": "honda", "year": 2004, "mpg": 30 },
-    { "model": "ford", "year": 1987, "mpg": 14}
+// Initial anime dataset (I hope you like Death Note)
+const animeData = [
+    { 
+        "id": 1,
+        "title": "Death Note", 
+        "rating": 9, 
+        "episodes": 37,
+        "dateAdded": "2024-03-20",
+        "popularityScore": 8.7 
+    }
 ]
 
-// let fullURL = ""
-const server = http.createServer( function( request,response ) {
-    if( request.method === "GET" ) {
-        handleGet( request, response )
-    }else if( request.method === "POST" ){
-        handlePost( request, response )
-    }
+// Calculate popularity score based on rating and episodes
+function calculatePopularityScore(rating, episodes) {
+    // added so popularity score is more accurate
+    const RATING_WEIGHT = 0.7;    
+    const EPISODE_WEIGHT = 0.3;   
+    
+    // Normalize episodes to a 1-10 scale
+    // just for sake, made 150 episodes assumed max
+    const normalizedEpisodes = Math.min(10, (episodes / 15));
+    
+    const weightedScore = (rating * RATING_WEIGHT) + (normalizedEpisodes * EPISODE_WEIGHT);
+    
+    return Math.min(10, Math.max(1, Number(weightedScore.toFixed(1))));
+}
 
+// let fullURL = ""
+const server = http.createServer(function(request, response) {
+    if (request.method === "GET") {
+        handleGet(request, response)
+    } else if (request.method === "POST") {
+        handlePost(request, response)
+    } else if (request.method === "DELETE") {
+        handleDelete(request, response)
+    } else if (request.method === "PUT") {
+        handlePut(request, response)
+    }
+    
     // The following shows the requests being sent to the server
-    // fullURL = `http://${request.headers.host}${request.url}`
-    // console.log( fullURL );
+    const fullURL = `http://${request.headers.host}${request.url}`
+    console.log( fullURL );
 })
 
 const handleGet = function( request, response ) {
+    if (request.url === "/api/anime") {
+        response.writeHead(200, { "Content-Type": "application/json" })
+        response.end(JSON.stringify(animeData))
+        return
+    }
+
     const filename = dir + request.url.slice( 1 )
 
     if( request.url === "/" ) {
@@ -45,12 +76,60 @@ const handlePost = function( request, response ) {
     })
 
     request.on( "end", function() {
-        console.log( JSON.parse( dataString ) )
+        const newAnime = JSON.parse(dataString)
+        
+        newAnime.id = animeData.length + 1
+        newAnime.dateAdded = new Date().toISOString().split('T')[0]
+        newAnime.popularityScore = calculatePopularityScore(
+            Number(newAnime.rating), 
+            Number(newAnime.episodes)
+        )
+        
+        animeData.push(newAnime)
 
-        // ... do something with the data here and at least generate the derived data
+        response.writeHead(200, { "Content-Type": "application/json" })
+        response.end(JSON.stringify(animeData))
+    })
+}
 
-        response.writeHead( 200, "OK", {"Content-Type": "text/plain" })
-        response.end("text")
+// to delete anime
+const handleDelete = function(request, response) {
+    const id = parseInt(request.url.split('/').pop())
+    const index = animeData.findIndex(anime => anime.id === id)
+    
+    if (index !== -1) {
+        animeData.splice(index, 1)
+    }
+    
+    response.writeHead(200, { "Content-Type": "application/json" })
+    response.end(JSON.stringify(animeData))
+}
+
+const handlePut = function(request, response) {
+    let dataString = ""
+
+    request.on("data", function(data) {
+        dataString += data
+    })
+
+    request.on("end", function() {
+        const id = parseInt(request.url.split('/').pop())
+        const updatedAnime = JSON.parse(dataString)
+        
+        const index = animeData.findIndex(anime => anime.id === id)
+        if (index !== -1) {
+            updatedAnime.id = id
+            updatedAnime.dateAdded = animeData[index].dateAdded
+            updatedAnime.popularityScore = calculatePopularityScore(
+                Number(updatedAnime.rating), 
+                Number(updatedAnime.episodes)
+            )
+            
+            animeData[index] = updatedAnime
+        }
+
+        response.writeHead(200, { "Content-Type": "application/json" })
+        response.end(JSON.stringify(animeData))
     })
 }
 
