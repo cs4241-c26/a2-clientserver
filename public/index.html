@@ -1,19 +1,59 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <title>CS4241 Assignment 2</title>
+    <title>Anime Rating System</title>
     <meta charset="utf-8">
-    <script src="js/main.js"></script>
     <link rel="stylesheet" href="css/main.css">
-
-    <!-- get rid of favicon error -->
-    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
 </head>
 <body>
-<form>
-    <label for="yourname">Your Name: </label><input type="text" id="yourname" value="your name here">
-    <button>submit</button>
-</form>
+    <header>
+        <h1>Anime Rating System</h1>
+    </header>
 
+    <main>
+        <!-- Anime Entry Form -->
+        <section class="form-section">
+            <h2>Add New Anime</h2>
+            <form id="animeForm">
+                <div class="form-group">
+                    <label for="title">Anime Title:</label>
+                    <input type="text" id="title" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="rating">Rating (1-10):</label>
+                    <input type="number" id="rating" min="1" max="10" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="episodes">Number of Episodes:</label>
+                    <input type="number" id="episodes" min="1" required>
+                </div>
+
+                <button type="submit">Add Anime</button>
+            </form>
+        </section>
+
+        <!-- Anime List w/ basic info -->
+        <section class="list-section">
+            <h2>Anime List</h2>
+            <table id="animeTable">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Rating</th>
+                        <th>Episodes</th>
+                        <th>Date Added</th>
+                        <th>Popularity Score</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="animeList"></tbody>
+            </table>
+        </section>
+    </main>
+
+    <script src="js/main.js"></script>
 </body>
 </html>
