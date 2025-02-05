@@ -1,6 +1,6 @@
 Assignment 2 - Short Stack: Basic Two-tier Web Application using HTML/CSS/JS and Node.js
 ## Basic Course Tracker
-Glitch link: https://a2-avstoyanov.glitch.me
+Glitch link: https://a2-avstoyanov.glitch.me <br>
 I made this website to act as a rough draft of the more advanced major tracker that my group will be working on for the final project. 
 I used mostly Flexbox for positioning.
 Instructions: 
