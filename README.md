@@ -2,6 +2,8 @@
 
 A dynamic web application that allows users to manage and rate anime entries. The application uses CSS Flexbox for layout positioning, particularly in the form groups and main container structure. The system calculates a popularity score based on the rating and number of episodes, providing users with a derived metric for each anime entry.
 
+Glitch Link: https://a2-adequatej.glitch.me/
+
 ### Instructions
 1. Add new anime entries using the form at the top of the page
 2. View all entries in the table below
