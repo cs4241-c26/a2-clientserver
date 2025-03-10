@@ -1,5 +1,11 @@
 // FRONT-END (CLIENT) JAVASCRIPT HERE
 
+// when the web page loads, associate clicking on the button with the function submit().
+window.onload = function() {
+    const button = document.querySelector("button");
+    button.onclick = submit;
+}
+
 const submit = async function( event ) {
     // stop form submission from trying to load
     // a new .html page for displaying results...
@@ -20,7 +26,3 @@ const submit = async function( event ) {
     console.log( "text:", text )
 }
 
-window.onload = function() {
-    const button = document.querySelector("button");
-    button.onclick = submit;
-}
