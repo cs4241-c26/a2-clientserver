@@ -1,9 +1,9 @@
-Assignment 2 - Short Stack: Basic Two-tier Web Application using HTML/CSS/JS and Node.js
+Assignment 2 - Client Server: Basic Two-tier Web Application using HTML/CSS/JS and Node.js
 ===
 
-Due: February 3rd, by 11:59 AM.
+Due: 
 
-This assignment will introduce you to creating a prototype two-tiered web application.
+This assignment will introduce you to creating a prototype two-tiered, client-server web application.
 Your application will include the use of HTML, CSS, JavaScript, and Node.js functionality, with active communication between the client and the server.
 
 Baseline Requirements
@@ -15,7 +15,7 @@ Try to make your application do something useful! A todo list, storing / retriev
 Your application is required to implement the following functionalities:
 
 - a `Server` which not only serves files, but also maintains a tabular dataset with 3 or more fields related to your application
-- a `Results` functionality which shows the entire dataset residing in the server's memory
+- a `Results` functionality which shows the entire dataset residing in the *server's memory*, i.e. the data resides as objects in the server code.
 - a `Form/Entry` functionality which allows a user to add or delete data items residing in the server's memory
 - a `Server Logic` which, upon receiving new or modified "incoming" data, includes and uses a function that adds at least one additional derived field to this incoming data before integrating it with the existing dataset
 - the `Derived field` for a new row of data must be computed based on fields already existing in the row.
