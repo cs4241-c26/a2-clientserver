@@ -78,5 +78,7 @@ const sendFile = function( response, filename ) {
 
 // process.env.PORT references the port that Glitch uses
 // the following line will either use the Glitch port or one that we provided
-server.listen( process.env.PORT || port )
+server.listen( process.env.PORT || port, () => {
+    console.log("Server listening on port " + port);
+} )
 
